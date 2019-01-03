@@ -1,5 +1,6 @@
 package com.github.user;
 
+import com.github.validator.UniqueEmail;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -20,8 +21,8 @@ public class User {
     @Size(min = 3, max = 32)
     private String lastName;
 
-    @Email
-    @NotBlank
+    @NotBlank @Email
+    @UniqueEmail
     private String email;
 
     @Size(min = 6, max = 32)
