@@ -34,6 +34,9 @@ public class User {
     @NotNull
     private boolean newsletter;
 
+    @NotNull
+    private boolean register; // default false, need accept link on email to get full access;
+
     private String permission;
 
     public Long getId() {
