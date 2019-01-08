@@ -1,5 +1,6 @@
 package com.github.user;
 
+import com.github.cart.Cart;
 import com.github.validator.UniqueEmail;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -21,8 +22,7 @@ public class User {
     @Size(min = 3, max = 32)
     private String lastName;
 
-    @NotBlank @Email
-    @UniqueEmail
+    @Email
     private String email;
 
     @Size(min = 6, max = 32)
@@ -34,10 +34,16 @@ public class User {
     @NotNull
     private boolean newsletter;
 
-    @NotNull
+    @Transient
     private boolean register; // default false, need accept link on email to get full access;
-
+   // @Column()
     private String permission;
+
+    @OneToOne
+    private Cart cart;
+
+    public User() {
+    }
 
     public Long getId() {
         return id;
@@ -103,6 +109,22 @@ public class User {
         this.permission = permission;
     }
 
+    public boolean isRegister() {
+        return register;
+    }
+
+    public void setRegister(boolean register) {
+        this.register = register;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -113,7 +135,9 @@ public class User {
                 ", password='" + password + '\'' +
                 ", gender=" + gender +
                 ", newsletter=" + newsletter +
+                ", register=" + register +
                 ", permission='" + permission + '\'' +
                 '}';
     }
+
 }
