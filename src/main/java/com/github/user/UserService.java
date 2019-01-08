@@ -12,5 +12,9 @@ public interface UserService {
     void delete(Long id);
 
     List<User> findAll();
-    User findByEmail(String email);
+
+    boolean existUserByEmail(String email);
+
+    User findUserByEmail(String email);
+
 }

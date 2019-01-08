@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -15,6 +16,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void save(Product product) {
+        product.setCreated(LocalDateTime.now());
         productRepository.save(product);
     }
 
@@ -37,4 +39,5 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findAll() {
         return productRepository.findAll();
     }
+
 }

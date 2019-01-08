@@ -1,5 +1,7 @@
 package com.github.user;
 
+import com.github.cart.Cart;
+import com.github.cart.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private CartService cartService;
 
     @GetMapping("/register")
     public String registerUser(Model model){
@@ -22,10 +26,23 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String addNewUser(@ModelAttribute("user") @Valid User user, BindingResult result){
+    public String addNewUser(@ModelAttribute @Valid User user, BindingResult result, Model model, HttpSession session){
         if (result.hasErrors()) {
             return "register";
         }
+        if(userService.existUserByEmail(user.getEmail()))
+        {
+            model.addAttribute("msg", "That email address is in use by another member.");
+            return "register";
+        }
+        Cart myCart = (Cart) session.getAttribute("mycart");
+
+        if(myCart == null){
+            myCart = new Cart();
+            cartService.save(myCart);
+        }
+        user.setCart(myCart);
+        session.setAttribute("mycart", myCart);
         userService.save(user);
         return "redirect:/";
     }
@@ -38,11 +55,19 @@ public class UserController {
 
     @PostMapping("/login")
     public String postLogin(@ModelAttribute("user") User user, Model model, HttpSession session){
-        User myUser = userService.findByEmail(user.getEmail());
+
+        Cart myCart = (Cart) session.getAttribute("mycart");
+
+        if(myCart != null){
+            session.removeAttribute("mycart");
+        }
+
+        User myUser = userService.findUserByEmail(user.getEmail());
         if(myUser == null || !myUser.getPassword().equals(user.getPassword())){
             model.addAttribute("msg", "Password or email is incorrect");
             return "login";
         }
+        session.setAttribute("mycart", user.getCart());
         session.setAttribute("user", myUser);
         return "redirect:/";
     }
@@ -55,6 +80,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session){
         session.removeAttribute("user");
+        session.removeAttribute("mycart");
         return "redirect:/";
     }
 }

@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Entity
 @Table(name ="carts")
 public class Cart {
@@ -14,18 +15,14 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    private User user;
+    @ManyToMany
+    private List<Product> productList = new ArrayList<>();
 
-    @OneToMany
-    List<Product> productList = new ArrayList<>();
+    private int quantityProductCart;
+
+    private int subtotal;
 
     public Cart() {
-    }
-
-    public Cart(User user, List<Product> productList) {
-        this.user = user;
-        this.productList = productList;
     }
 
     public Long getId() {
@@ -36,19 +33,42 @@ public class Cart {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public void updateProductList(Product product){
+        this.productList.add(product);
+        this.subtotal = product.getCost();
+        this.quantityProductCart++;
+    }
+    public void deleteProductList(Product product){
+        for (int i = 0; i < this.productList.size(); i++) {
+
+            if(this.productList.get(i).equals(product)){
+                this.productList.remove(product);
+                this.quantityProductCart--;
+            }
+        }
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public int getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(int subtotal) {
+        this.subtotal = subtotal;
     }
 
     public List<Product> getProductList() {
         return productList;
     }
+    public int getQuantityProductCart() {
+        return quantityProductCart;
+    }
 
     public void setProductList(List<Product> productList) {
         this.productList = productList;
     }
+
+    public void setQuantityProductCart(int quantityProductList) {
+        this.quantityProductCart = quantityProductList;
+    }
+
 }

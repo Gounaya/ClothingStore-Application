@@ -1,5 +1,7 @@
 package com.github.cart;
 
+import com.github.product.Product;
+import com.github.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +36,10 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<Cart> findAll() {
         return cartRepository.findAll();
+    }
+
+    @Override
+    public void deleteByProduct(Product product, Cart cart) {
+        cart.deleteProductList(product);
     }
 }

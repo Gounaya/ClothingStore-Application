@@ -1,5 +1,9 @@
 package com.github.cart;
 
+
+import com.github.product.Product;
+import com.github.user.User;
+
 import java.util.List;
 
 public interface CartService {
@@ -12,4 +16,7 @@ public interface CartService {
     void delete(Long id);
 
     List<Cart> findAll();
+
+    void deleteByProduct(Product product, Cart cart);
+
 }

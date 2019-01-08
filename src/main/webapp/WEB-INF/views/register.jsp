@@ -24,6 +24,13 @@
     <label for ="emailId">Email</label>
     <form:input type="email" path="email" id="emailId"/><br><br>
     <form:errors path="email" element="div"/><br><br>
+    <span style="red">${msg}</span>
+    <form:radiobutton path="gender" value="M"/>Male
+    <form:radiobutton path="gender" value="F"/>Female
+
+    <label for ="newsId">Newsletter</label>
+    <form:checkbox path="newsletter" id="newsId"/><br><br>
+    <form:errors path="newsletter" element="div"/><br><br>
 
     <input type="submit" value="save">
 </form:form>
