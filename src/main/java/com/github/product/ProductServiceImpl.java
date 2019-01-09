@@ -3,7 +3,9 @@ package com.github.product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,6 +18,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void save(Product product) {
+        MultipartFile file = product.getImage();
+
+        if (null != file){
+            try {
+                product.setPhoto(file.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         product.setCreated(LocalDateTime.now());
         productRepository.save(product);
     }

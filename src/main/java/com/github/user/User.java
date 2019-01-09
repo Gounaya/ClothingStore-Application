@@ -23,6 +23,7 @@ public class User {
     private String lastName;
 
     @Email
+    @UniqueEmail
     private String email;
 
     @Size(min = 6, max = 32)

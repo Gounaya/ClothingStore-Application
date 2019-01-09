@@ -19,6 +19,7 @@ http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
             <property name="hibernate.connection.useUnicode" value="true" />
             <property name="hibernate.connection.characterEncoding" value="utf8" />
             <property name="hibernate.connection.CharSet" value="utf8" />
+            <property name="javax.persistence.validation.mode" value="NONE" />
         </properties>
     </persistence-unit>
 </persistence>

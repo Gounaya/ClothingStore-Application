@@ -4,12 +4,14 @@ import com.github.product.Product;
 import com.github.user.User;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
 @Table(name ="carts")
+@Transactional
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

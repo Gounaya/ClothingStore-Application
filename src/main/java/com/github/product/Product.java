@@ -86,7 +86,14 @@ public class Product{
         this.quantity = quantity;
     }
 
-    public String getPhoto() throws UnsupportedEncodingException {
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public String getPhotoImage() throws UnsupportedEncodingException {
+        if(this.photo == null){
+            return "";
+        }
         byte[] encodeBase64 = Base64.getEncoder().encode(this.photo);
         String base64Encoded = new String(encodeBase64, "UTF-8");
         return base64Encoded;

@@ -30,11 +30,11 @@ public class UserController {
         if (result.hasErrors()) {
             return "register";
         }
-        if(userService.existUserByEmail(user.getEmail()))
+/*        if(userService.existUserByEmail(user.getEmail()))
         {
             model.addAttribute("msg", "That email address is in use by another member.");
             return "register";
-        }
+        }*/
         Cart myCart = (Cart) session.getAttribute("mycart");
 
         if(myCart == null){
@@ -69,6 +69,7 @@ public class UserController {
         }
         session.setAttribute("mycart", user.getCart());
         session.setAttribute("user", myUser);
+        session.setMaxInactiveInterval(-1);
         return "redirect:/";
     }
 

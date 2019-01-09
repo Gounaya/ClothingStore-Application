@@ -7,6 +7,7 @@ import com.github.product.Product;
 import com.github.product.ProductService;
 import com.github.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,27 +71,15 @@ public class CartController {
         return new ResponseEntity<String>(headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/${cid}/product/${uid}",method = RequestMethod.DELETE, headers = "Accept=application/json")
-    public ResponseEntity<String> deleteFromJson(@RequestBody String json){
+    @RequestMapping(value = "/{cid}/product/{pid}",method = RequestMethod.DELETE, headers = "Accept=application/json")
+    public ResponseEntity<String> deleteFromJson(@PathVariable Long cid, @PathVariable Long pid){
 
-        ObjectMapper mapper = new ObjectMapper();
-
-        Product objectProduct = null;
-        try {
-            objectProduct = mapper.readValue(json, Product.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
 
-        if (objectProduct == null) {
-            return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
-        }
-
-        Product product = productService.find(objectProduct.getId());
-        Cart cart = cartService.find(product.getCart().getId());
+        Product product = productService.find(pid);
+        Cart cart = cartService.find(cid);
 
         if (product == null || cart == null) {
             return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);

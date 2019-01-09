@@ -1,6 +1,8 @@
 package com.github.config;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -55,6 +58,17 @@ public class AppConfig implements WebMvcConfigurer {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
         multipartResolver.setMaxUploadSize(20848820);
         return multipartResolver;
+    }
+
+
+    @Autowired
+    private AutowireCapableBeanFactory autowireCapableBeanFactory;
+
+    @Bean
+    public SpringConstraintValidatorFactory springConstraintValidatorFactory(){
+
+        return new SpringConstraintValidatorFactory(autowireCapableBeanFactory);
+
     }
 
 }

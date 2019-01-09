@@ -2,6 +2,7 @@ package com.github.cart;
 
 import com.github.product.Product;
 import com.github.user.User;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void deleteByProduct(Product product, Cart cart) {
-        cart.deleteProductList(product);
+       // Hibernate.initialize(cart.getProductList());
+        //cart.deleteProductList(product);
+
     }
 }

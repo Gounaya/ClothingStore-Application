@@ -31,17 +31,7 @@ public class ProductController {
         if (result.hasErrors()) {
             return "addproduct";
         }
-/*        MultipartFile file = product.getImage();
 
-        if (null != file){
-            product.setPhoto(file.getBytes());
-            try {
-                product.setPhoto(file.getBytes());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
 
         productService.save(product);
         return "redirect:/";
