@@ -2,6 +2,9 @@ package com.github.user;
 
 import com.github.cart.Cart;
 import com.github.cart.CartService;
+import com.github.utils.MailSender;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,11 +33,6 @@ public class UserController {
         if (result.hasErrors()) {
             return "register";
         }
-/*        if(userService.existUserByEmail(user.getEmail()))
-        {
-            model.addAttribute("msg", "That email address is in use by another member.");
-            return "register";
-        }*/
         Cart myCart = (Cart) session.getAttribute("mycart");
 
         if(myCart == null){
@@ -43,10 +41,24 @@ public class UserController {
         }
         user.setCart(myCart);
         session.setAttribute("mycart", myCart);
+
         userService.save(user);
         return "redirect:/";
     }
 
+    @GetMapping("/register/{token}")
+    public String registerUser(@PathVariable String token){
+        User user = userService.findByRegisterToken(token);
+        if(user == null){
+            return "redirect:/";
+        }
+        if(user.getRegisterToken().equals(token)){
+            // todo message passed
+            user.setRegister(true);
+            userService.update(user);
+        }
+        return "redirect:/";
+    }
     @GetMapping("/login")
     public String getLogin(Model model){
         model.addAttribute("user", new User());
@@ -67,9 +79,10 @@ public class UserController {
             model.addAttribute("msg", "Password or email is incorrect");
             return "login";
         }
+        // todo update listproduct, old + after login
         session.setAttribute("mycart", user.getCart());
         session.setAttribute("user", myUser);
-        session.setMaxInactiveInterval(-1);
+        //session.setMaxInactiveInterval(-1);
         return "redirect:/";
     }
 

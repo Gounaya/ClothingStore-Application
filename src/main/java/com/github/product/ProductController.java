@@ -1,18 +1,16 @@
 package com.github.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 @Controller
 @RequestMapping("/product")
@@ -21,25 +19,31 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/add")
-    public String addProductGet(Model model){
-        model.addAttribute("product", new Product());
-        return "addproduct";
-    }
-    @PostMapping("/add")
-    public String addProductPost(@ModelAttribute("product") Product product, HttpServletRequest request, BindingResult result){
-        if (result.hasErrors()) {
-            return "addproduct";
+    @RequestMapping(value = "/", method = RequestMethod.GET, headers = "Accept=application/json")
+    public ResponseEntity<List<Product>> findProducts() {
+
+        List<Product> productList = productService.findAll();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+
+        if (productList == null) {
+            return new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);
         }
-
-
-        productService.save(product);
-        return "redirect:/";
-    }
-    @GetMapping("/{id}")
-    @ResponseBody
-    public Product getAllProducts(@PathVariable long id){
-        return productService.find(id);
+        return new ResponseEntity<List<Product>>(productList, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    public ResponseEntity<Product> findProduct(@PathVariable Long id) {
+
+        Product product = productService.find(id);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+
+        if (product == null) {
+            return new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(product, HttpStatus.OK);
+    }
 }

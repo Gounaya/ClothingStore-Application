@@ -17,4 +17,5 @@ public interface UserService {
 
     User findUserByEmail(String email);
 
+    User findByRegisterToken(String token);
 }

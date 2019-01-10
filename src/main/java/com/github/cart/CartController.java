@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/cart")
@@ -30,61 +30,59 @@ public class CartController {
 
     @GetMapping("/info")
     public String myCart(Model model, HttpSession session){
-/*        Cart cart ;
-        if(cart == null){
-            // todo  ....
-        }
-        List<Product> myProducts = cart.getProductList();
-        model.addAttribute("products", myProducts);*/
-
         return "mycart";
     }
-    @RequestMapping(path = "/add", method = RequestMethod.GET)
-    public String addProductCart(HttpSession session){
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Cart> addProductCart(HttpSession session){
+        Cart cart = (Cart) session.getAttribute("mycart");
 
-        Product product = productService.find(1L);
-        Cart myCart = (Cart) session.getAttribute("mycart");
-        User user = (User) session.getAttribute("user");
-        if(myCart == null){
-            myCart = new Cart();
-            cartService.save(myCart);
-            session.setAttribute("mycart", myCart);
+        if(cart == null){
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "application/json");
+            return new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);
         }
-        myCart.updateProductList(product);
-        cartService.update(myCart);
-        return "redirect:/";
+        return new ResponseEntity<Cart>(cart, HttpStatus.OK);
     }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-    public ResponseEntity<String> addProductCart(@PathVariable Long id) {
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Cart> addProductCart(@PathVariable Long id, HttpSession session){
 
         Product product = productService.find(id);
+        Cart cart = (Cart) session.getAttribute("mycart");
 
-        if (product == null) {
-            return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+        if(product == null){
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "application/json");
+            return new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<String>(headers, HttpStatus.OK);
+        if(cart == null){
+            cart = new Cart();
+            cartService.save(cart);
+            session.setAttribute("mycart", cart);
+        }
+        List<Product> products = cart.getProductList();
+        products.add(product);
+        cart.setProductList(products);
+        cartService.update(cart);
+        return new ResponseEntity<Cart>(cart, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{cid}/product/{pid}",method = RequestMethod.DELETE, headers = "Accept=application/json")
-    public ResponseEntity<String> deleteFromJson(@PathVariable Long cid, @PathVariable Long pid){
 
+    @RequestMapping(value = "/{cid}/product/{pid}",method = RequestMethod.DELETE, headers = "Accept=application/json")
+    public ResponseEntity<Cart> deleteCart(@PathVariable Long cid, @PathVariable Long pid){
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
 
-        Product product = productService.find(pid);
         Cart cart = cartService.find(cid);
+        Product product = productService.find(pid);
 
         if (product == null || cart == null) {
-            return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);
         }
-        cartService.deleteByProduct(product, cart);
-        return new ResponseEntity<String>(headers, HttpStatus.OK);
+        List<Product> productList = cart.getProductList();
+        productList.remove(product);
+        cart.setProductList(productList);
+        cartService.update(cart);
+        return new ResponseEntity<Cart>(cart, HttpStatus.OK);
     }
 }

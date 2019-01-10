@@ -2,18 +2,16 @@ package com.github.product;
 
 
 import com.github.cart.Cart;
-import com.sun.istack.internal.NotNull;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
-
 
 @Entity
 @Table(name = "products")
@@ -29,10 +27,6 @@ public class Product{
     private int cost;
 
     private int quantity;
-    private int available;
-
-    @ManyToOne
-    private Cart cart;
 
     @Lob
     private byte[] photo;
@@ -43,15 +37,10 @@ public class Product{
     @DateTimeFormat
     private LocalDateTime created;
 
-    public Product() {
-    }
+    @Size(min = 5, max = 32)
+    private String describeProduct;
 
-    public Product(String name, int cost, int quantity, byte[] photo, MultipartFile image) {
-        this.name = name;
-        this.cost = cost;
-        this.quantity = quantity;
-        this.photo = photo;
-        this.image = image;
+    public Product() {
     }
 
     public Long getId() {
@@ -117,20 +106,12 @@ public class Product{
         this.created = created;
     }
 
-    public int getAvailable() {
-        return available;
+
+    public String getDescribeProduct() {
+        return describeProduct;
     }
 
-    public void setAvailable(int available) {
-        this.available = available;
+    public void setDescribeProduct(String describeProduct) {
+        this.describeProduct = describeProduct;
     }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
-
 }

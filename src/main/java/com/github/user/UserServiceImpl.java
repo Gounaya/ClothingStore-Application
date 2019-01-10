@@ -1,10 +1,13 @@
 package com.github.user;
 
+
+import com.github.utils.MailSender;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.List;
+
 
 @Service
 @Transactional
@@ -13,8 +16,26 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+
     @Override
     public void save(User user) {
+
+        if(user.getEmail().equals("spedrasss@gmail.com") || user.getEmail().equals("admin@gmail.com")){
+            user.setAdmin(true);
+        }
+
+        String generatedString = RandomStringUtils.randomAlphanumeric(32);
+        user.setRegisterToken(generatedString);
+        String subject = "Welcome " + user.getFirstName();
+
+        String content =
+                String.format("<a href=\"localhost:8080/register/%s\" >Register link ->  Click</a>",
+                    user.getRegisterToken());
+        try {
+            MailSender.sendEmail(user.getEmail(), subject, content);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         userRepository.save(user);
     }
 
@@ -45,11 +66,14 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
-
     @Override
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
 
+    @Override
+    public User findByRegisterToken(String token) {
+        return userRepository.findByRegisterToken(token);
+    }
 
 }

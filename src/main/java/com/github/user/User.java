@@ -35,13 +35,14 @@ public class User {
     @NotNull
     private boolean newsletter;
 
-    @Transient
-    private boolean register; // default false, need accept link on email to get full access;
-   // @Column()
-    private String permission;
+    private boolean register;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private Cart cart;
+
+    private boolean admin;
+
+    private String registerToken;
 
     public User() {
     }
@@ -102,14 +103,6 @@ public class User {
         this.newsletter = newsletter;
     }
 
-    public String getPermission() {
-        return permission;
-    }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
-
     public boolean isRegister() {
         return register;
     }
@@ -126,6 +119,22 @@ public class User {
         this.cart = cart;
     }
 
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public String getRegisterToken() {
+        return registerToken;
+    }
+
+    public void setRegisterToken(String registerToken) {
+        this.registerToken = registerToken;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -137,8 +146,8 @@ public class User {
                 ", gender=" + gender +
                 ", newsletter=" + newsletter +
                 ", register=" + register +
-                ", permission='" + permission + '\'' +
+                ", cart=" + cart +
+                ", isAdmin=" + admin +
                 '}';
     }
-
 }

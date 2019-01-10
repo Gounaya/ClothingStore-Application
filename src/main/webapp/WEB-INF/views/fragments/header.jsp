@@ -1,48 +1,50 @@
+<%@ page language="java"
+         contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<nav class="navbar navbar-default navbar-fixed-top">
-    <!-- <div class="container-fluid">
-      Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">You Shop Name</a>
-        </div>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Category one <span class="sr-only">(current)</span></a></li>
-                <li><a href="#">Category two</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <span class="glyphicon glyphicon-shopping-cart"></span> ${mycart.quantityProductCart} - Items<span class="caret"></span></a>
-                    <ul class="dropdown-menu dropdown-cart" role="menu">
-                        <c:forEach items="${mycart.productList}" var="product">
-                        <li>
-                  <span class="item">
-                    <span class="item-left">
-                        <img width="50px" height="50px" src="data:image/png;base64, ${product.photo}" alt="none">
-                        <span class="item-info">
-                            <span>${product.name}</span>
-                            <span>${product.cost}zl</span>
-                        </span>
-                    </span>
-                    <span class="item-right">
-                        <button class="btn btn-xs btn-danger pull-right">x</button>
-                    </span>
-                </span>
-                        </li>
-                        </c:forEach>
-                        <li class="divider"></li>
-                        <li><a class="text-center" href="/cart/info">View My Cart</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    <!--  </div> /.container-fluid -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+        </ul>
+        <jsp:include page="cart.jsp"></jsp:include>
+        <div class="btn-group dropleft">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Account
+            </button>
+            <div class="dropdown-menu">
+
+                <c:if test ="${empty user}">
+                    <a class="dropdown-item" href="/register"><button class="btn btn-outline-success" type="button">Register</button></a>
+                </c:if>
+
+                <c:if test ="${empty user}">
+                    <a class="dropdown-item" href="/login"><button class="btn btn-outline-primary" type="button">Login</button></a>
+                </c:if>
+
+                <c:if test ="${not empty user.id}">
+                    <a class="dropdown-item" href="/logout">Logout - <c:out value="${user.firstName}"/> </a>
+                </c:if>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/cart/info">View shoppingcart</a>
+            </div>
+        </div>
+        <form class="form-inline">
+            <c:if test ="${not empty user}">
+                <c:if test ="${user.admin == true}">
+                    <a class="dropdown-item" href="/admin/"><button class="btn btn-outline-primary" type="button">Admin Panel</button></a></c:if>
+            </c:if>
+        </form>
+    </div>
 </nav>
+
