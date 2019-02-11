@@ -20,7 +20,7 @@
         }
         function renderProductList(renderingPoint){
             $.ajax({
-                url: "http://localhost:8080/product/",
+                url: "http://localhost:8080/products",
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -29,8 +29,8 @@
                 for(var i = 0; i < products.length; i++){
                     var card = $("<div class='card'>");
                     var image = $('<img class="card-img-top" width="100px" height="199px" src="data:image/png;base64,'+products[i].photo+'"alt="none">');
-                    var cardBody = $("<div class='card-body bg-light'><p><h5 class='card-title'>"+products[i].name+"</h5></p><h3>"+products[i].cost+"zł</h3>");
-                    var inCardBody = $("<p class='card-text'>"+products[i].describeProduct+"</p><button class='addproduct' data-product-id='"+products[i].id+"'>add to card</button>");
+                    var cardBody = $("<div class='card-body bg-light'><p><h5 class='card-title'>"+products[i].name+"</h5></p><h3>"+products[i].price+"zł</h3>");
+                    var inCardBody = $("<p class='card-text'>"+products[i].description+"</p><button class='addproduct' data-product-id='"+products[i].id+"'>add to card</button>");
                     card.append(image);
                     cardBody.append(inCardBody);
                     card.append(cardBody);
@@ -51,13 +51,15 @@
         });
         function renderCart(renderingPoint){
             $.ajax({
-                url: "http://localhost:8080/cart/",
+                url: "http://localhost:8080/cart",
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
             }).done(function(cart){
                 renderingPoint.empty();
-                var products = cart.productList;
+
+                console.log(cart);
+/*                var products = cart.productList;
                 var divider = $("<div class='dropdown-divider'>");
                 var shoppingCard = $("<a class='dropdown-item' href='/cart/info'>View shoppingcart</a>");
                 for(var i = 0; i < products.length; i++){
@@ -65,7 +67,7 @@
                     renderingPoint.append(item);
                 }
                 renderingPoint.append(divider);
-                renderingPoint.append(shoppingCard);
+                renderingPoint.append(shoppingCard);*/
             });
         };
     });

@@ -1,6 +1,5 @@
 package com.github.order;
 
-import com.github.cart.Cart;
 import com.github.user.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -19,9 +18,6 @@ public class Order {
 
     @DateTimeFormat
     private LocalDateTime created;
-
-    @ManyToOne
-    private Cart cart;
 
     public Long getId() {
         return id;
@@ -45,13 +41,5 @@ public class Order {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
     }
 }

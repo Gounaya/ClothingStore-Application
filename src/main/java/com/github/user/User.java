@@ -1,9 +1,7 @@
 package com.github.user;
 
-import com.github.cart.Cart;
 import com.github.validator.UniqueEmail;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -24,6 +22,7 @@ public class User {
 
     @Email
     @UniqueEmail
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Size(min = 6, max = 32)
@@ -36,9 +35,6 @@ public class User {
     private boolean newsletter;
 
     private boolean register;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    private Cart cart;
 
     private boolean admin;
 
@@ -111,14 +107,6 @@ public class User {
         this.register = register;
     }
 
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
-
     public boolean isAdmin() {
         return admin;
     }
@@ -146,7 +134,6 @@ public class User {
                 ", gender=" + gender +
                 ", newsletter=" + newsletter +
                 ", register=" + register +
-                ", cart=" + cart +
                 ", isAdmin=" + admin +
                 '}';
     }

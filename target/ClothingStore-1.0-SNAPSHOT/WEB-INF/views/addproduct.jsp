@@ -23,8 +23,8 @@
     </div>
     <div class="form-group">
     <label for ="costId">cost:</label>
-    <form:input type="number" path="cost" id="costId"/>
-    <form:errors path="cost" element="div"/>
+    <form:input type="number" path="price" id="costId"/>
+    <form:errors path="price" element="div"/>
     </div>
         <div class="form-group">
             <label for ="quantityId">quantity:</label>
@@ -32,8 +32,8 @@
             <form:errors path="quantity" element="div"/>
         </div>
     <label for ="describeId">describe:</label>
-    <form:input type="text" path="describeProduct" id="describeId"/>
-    <form:errors path="describeProduct" element="div"/>
+    <form:input type="text" path="description" id="describeId"/>
+    <form:errors path="description" element="div"/>
 </div>
         <div class="form-group">
     <label for="imageId">Product Image: </label>

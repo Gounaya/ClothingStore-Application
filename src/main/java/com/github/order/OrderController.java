@@ -1,6 +1,5 @@
 package com.github.order;
 
-import com.github.cart.Cart;
 import com.github.cart.CartService;
 import com.github.user.User;
 import com.github.user.UserService;
@@ -22,21 +21,15 @@ public class OrderController {
 
     @GetMapping("/order/finish/")
     public String finish(HttpSession session){
-        Cart cart = (Cart) session.getAttribute("mycart");
         User user = (User) session.getAttribute("user");
-        if(cart == null || user == null){
+        if(user == null){
             return "redirect:/";
         }
         Order order = new Order();
-        order.setCart(cart);
         order.setUser(user);
         order.setCreated(LocalDateTime.now());
         orderService.save(order);
-        Cart newCart = new Cart();
-        cartService.save(newCart);
-        user.setCart(newCart);
         userService.update(user);
-        session.setAttribute("mycart", newCart);
         return "redirect:/";
     }
 }

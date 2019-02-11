@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,8 +12,12 @@ import java.util.List;
 @Transactional
 public class ProductServiceImpl implements ProductService {
 
+    private final ProductRepository productRepository;
+
     @Autowired
-    private ProductRepository productRepository;
+    public ProductServiceImpl(ProductRepository productRepository){
+        this.productRepository = productRepository;
+    }
 
     @Override
     public void save(Product product) {
@@ -27,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
                 e.printStackTrace();
             }
         }
-        product.setCreated(LocalDateTime.now());
+        product.setCreateDate(LocalDateTime.now());
         productRepository.save(product);
     }
 
