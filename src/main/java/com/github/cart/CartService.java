@@ -1,15 +1,17 @@
 package com.github.cart;
 
-import java.util.List;
+
+import com.github.product.Product;
+import java.math.BigDecimal;
+import java.util.Map;
 
 public interface CartService {
-    void save(Cart cart);
+    void addProduct(Product product);
 
-    void update(Cart cart);
+    void removeProduct(Product product);
 
-    Cart find(Long id);
+    Map<Product, Integer> getProductsInCart();
 
-    void delete(Long id);
+    BigDecimal getTotal();
 
-    List<Cart> findAll();
 }

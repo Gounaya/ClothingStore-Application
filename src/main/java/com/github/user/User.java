@@ -2,7 +2,6 @@ package com.github.user;
 
 import com.github.validator.UniqueEmail;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -21,8 +20,9 @@ public class User {
     @Size(min = 3, max = 32)
     private String lastName;
 
-    @NotBlank @Email
+    @Email
     @UniqueEmail
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Size(min = 6, max = 32)
@@ -34,10 +34,14 @@ public class User {
     @NotNull
     private boolean newsletter;
 
-    @NotNull
-    private boolean register; // default false, need accept link on email to get full access;
+    private boolean register;
 
-    private String permission;
+    private boolean admin;
+
+    private String registerToken;
+
+    public User() {
+    }
 
     public Long getId() {
         return id;
@@ -95,12 +99,28 @@ public class User {
         this.newsletter = newsletter;
     }
 
-    public String getPermission() {
-        return permission;
+    public boolean isRegister() {
+        return register;
     }
 
-    public void setPermission(String permission) {
-        this.permission = permission;
+    public void setRegister(boolean register) {
+        this.register = register;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public String getRegisterToken() {
+        return registerToken;
+    }
+
+    public void setRegisterToken(String registerToken) {
+        this.registerToken = registerToken;
     }
 
     @Override
@@ -113,7 +133,8 @@ public class User {
                 ", password='" + password + '\'' +
                 ", gender=" + gender +
                 ", newsletter=" + newsletter +
-                ", permission='" + permission + '\'' +
+                ", register=" + register +
+                ", isAdmin=" + admin +
                 '}';
     }
 }
